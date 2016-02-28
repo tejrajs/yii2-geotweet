@@ -7,7 +7,13 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
+use app\models\SignupForm;
 use app\models\ContactForm;
+use app\components\CTwitter;
+use yii\base\Object;
+use app\libs\Coordinate;
+use app\models\MapSearchForm;
+use app\models\Setting;
 
 class SiteController extends Controller
 {
@@ -49,7 +55,13 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
-        return $this->render('index');
+    	$model = new MapSearchForm();
+    	if($model->load(Yii::$app->request->post())){
+    		return $this->redirect(['/site/map','city'=>$model->city]);
+    	}
+    	return $this->render('index', [
+    			'model' => $model,
+    	]);
     }
 
     public function actionLogin()
@@ -90,5 +102,42 @@ class SiteController extends Controller
     public function actionAbout()
     {
         return $this->render('about');
+    }
+    public function actionSearch()
+    {
+    	$model = new MapSearchForm();
+    	if($model->load(Yii::$app->request->post())){
+    		return $this->redirect(['/site/map','city'=>$model->city]);
+    	}
+    	return $this->render('search', [
+    			'model' => $model,
+    	]);
+    }
+    
+    public function actionMap($city)
+    {
+    	$coordinat = new Coordinate($city);
+    
+    	$twitter = new CTwitter();
+    	 
+    	$responce = $twitter->api('search/tweets.json', 'GET', ['geocode' => $coordinat->lat.','.$coordinat->lng.','.Setting::getValue('tweetArea')]);
+    	 
+    	//echo '<pre>';print_r($responce);
+    	return $this->render('map', [
+    			'responces' => $responce['statuses'],
+    			'coordinat' => $coordinat
+    	]);
+    }
+    public function actionTest(){
+    	$coordinat = new Coordinate('kathmandu');
+    	$twitter = new CTwitter();
+    	 
+    	$responce = $twitter->api('search/tweets.json', 'GET', ['geocode' => $coordinat->lat.','.$coordinat->lng.','.Setting::getValue('tweetArea')]);
+    	 
+    	echo '<pre>';print_r($responce);die;
+    	return $this->render('map', [
+    			'responces' => $responce['statuses'],
+    			'coordinat' => $coordinat
+    	]);
     }
 }

@@ -1,5 +1,6 @@
 <?php
-
+use yii\helpers\Html;
+use yii\bootstrap\ActiveForm;
 /* @var $this yii\web\View */
 
 $this->title = 'My Yii Application';
@@ -7,11 +8,20 @@ $this->title = 'My Yii Application';
 <div class="site-index">
 
     <div class="jumbotron">
-        <h1>Congratulations!</h1>
-
-        <p class="lead">You have successfully created your Yii-powered application.</p>
-
-        <p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com">Get started with Yii</a></p>
+        <h1><?= Html::encode($this->title) ?></h1>
+	
+	    <p>Please enter your desire city:</p>
+	
+	    <div class="row">
+	        <div class="col-lg-5">
+	            <?php $form = ActiveForm::begin(['id' => 'form-search']); ?>
+	                <?= $form->field($model, 'city') ?>
+	                <div class="form-group">
+	                    <?= Html::submitButton('Search', ['class' => 'btn btn-primary', 'name' => 'search-button']) ?>
+	                </div>
+	            <?php ActiveForm::end(); ?>
+	        </div>
+	    </div>
     </div>
 
     <div class="body-content">
