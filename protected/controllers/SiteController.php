@@ -14,6 +14,7 @@ use yii\base\Object;
 use app\libs\Coordinate;
 use app\models\MapSearchForm;
 use app\models\Setting;
+use app\models\SettingForm;
 
 class SiteController extends Controller
 {
@@ -110,6 +111,16 @@ class SiteController extends Controller
     		return $this->redirect(['/site/map','city'=>$model->city]);
     	}
     	return $this->render('search', [
+    			'model' => $model,
+    	]);
+    }
+    public function actionSetting()
+    {
+    	$model = new SettingForm();
+    	if($model->load(Yii::$app->request->post()) && $model->save()){
+    		return $this->redirect(['/site/index']);
+    	}
+    	return $this->render('setting', [
     			'model' => $model,
     	]);
     }

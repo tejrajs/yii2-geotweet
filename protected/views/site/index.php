@@ -13,7 +13,7 @@ $this->title = 'My Yii Application';
 	    <p>Please enter your desire city:</p>
 	
 	    <div class="row">
-	        <div class="col-lg-5">
+	        <div class="col-lg-12">
 	            <?php $form = ActiveForm::begin(['id' => 'form-search']); ?>
 	                <?= $form->field($model, 'city') ?>
 	                <div class="form-group">
